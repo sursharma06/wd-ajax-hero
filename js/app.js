@@ -1,9 +1,9 @@
-(function() {
+(function () {
   'use strict';
 
-  const movies = [];
+  var movies = [];
 
-  const renderMovies = function() {
+  const renderMovies = function () {
     $('#listings').empty();
 
     for (const movie of movies) {
@@ -14,7 +14,7 @@
 
       $title.attr({
         'data-position': 'top',
-        'data-tooltip': movie.title
+        'data-tooltip': movie.title,
       });
 
       $title.tooltip({ delay: 50 }).text(movie.title);
@@ -23,7 +23,7 @@
 
       $poster.attr({
         src: movie.poster,
-        alt: `${movie.poster} Poster`
+        alt: `${movie.poster} Poster`,
       });
 
       $content.append($title, $poster);
@@ -57,4 +57,56 @@
   };
 
   // ADD YOUR CODE HERE
+  document.querySelector('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var searchTerm = document.querySelector('#search').value;
+    if (searchTerm != '') {
+      $.get('https://omdb-api.now.sh/?s=' + searchTerm, function (data) {
+        for (var i = 0; i < data.Search.length; i++) {
+          var movie = {};
+          movie.title = data.Search[i].Title;
+          movie.poster = data.Search[i].Poster;
+          movie.id = data.Search[i].id;
+          movie.year = data.Search[i].year;
+          //console.log(data.Search[i]);
+          movies.push(movie);
+          console.log(movies);
+        }
+
+        renderMovies();
+      });
+    }
+  });
 })();
+
+
+
+
+
+
+
+//     document.querySelector('form').addEventListener('submit', function (event) {
+//         event.preventDefault();
+//         var searchTerm = document.querySelector('#search').value;
+//         if (searchTerm != '') {
+//           document.querySelector('#search').value = '';
+//           $.get('https://omdb-api.now.sh/?s=' + searchTerm, function (data) {
+//             console.log(data.Search[0]);
+//           });
+//         // var searchTerm = document.querySelector('#search').value;
+//         // //console.log("you clicked the button");
+//         // $.get('https://omdb-api.now.sh/?s=' + searchTerm, function (data) {
+//         //   console.log(data);
+//         //   var movie = {};
+//         //   for (var i = 0; i < data.Search.length; i++) {
+//         //     console.log(data.Search[i]);
+//         //
+//         //     //document.querySelector('img').src = data.Search[i].Poster;
+//       //     //document.querySelector('body').append(data.Search[i].Poster);
+//       //     renderMovies();}
+//       };
+//     })();
+//
+// // $.get('https://omdb-api.now.sh/?t=rambo', function (data) {
+// //   console.log(data);
+// // });
